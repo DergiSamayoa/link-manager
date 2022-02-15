@@ -21,7 +21,7 @@
                                     <th style="color: #fff">Acciones</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($usuarios as $usuario)
+                                    @foreach ($users as $usuario)
                                         <tr>
                                             <td style="display: none">{{ $usuario->id }}</td>
                                             <td>{{ $usuario->name }}</td>
@@ -47,7 +47,7 @@
                                 </tbody>
                             </table>
                             <div class="pagination justify-content-end">
-                                {!! $usuarios->links() !!}
+                                {!! $users->links() !!}
                             </div>
                         </div>
                     </div>

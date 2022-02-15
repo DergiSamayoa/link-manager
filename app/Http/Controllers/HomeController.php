@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
@@ -34,8 +35,11 @@ class HomeController extends Controller
         $user = User::find(Auth::user()->id);
         $role = Role::find($user->id);
         $permissions = $user->getAllPermissions();
+        $roles = Role::all();
+        $users = User::all();
+        $blogs = Blog::all();
         //$role->hasPermissionTo("universal");
-        //dd($role->hasPermissionTo("menu-usuario"));
-        return view('home', compact('user','role', 'permissions'));
+        //dd($roles);
+        return view('home', compact('user','role', 'permissions', 'roles', 'users', 'blogs'));
     }
 }

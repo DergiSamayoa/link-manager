@@ -57,7 +57,8 @@ class RolController extends Controller
     public function create()
     {
         $permission = Permission::get();
-        return view('roles.crear', compact('permission'));
+        $user = User::find(Auth::user()->id);
+        return view('roles.crear', compact('permission', 'user'));
     }
 
     /**
@@ -102,8 +103,9 @@ class RolController extends Controller
                                 'role_has_permissions.permission_id',
                                 'role_has_permissions.permission_id')
                             ->all();
+        $user = User::find(Auth::user()->id);
         
-        return view('roles.editar', compact('role', 'permission', 'rolePermissions'));
+        return view('roles.editar', compact('role', 'permission', 'rolePermissions', 'user'));
     }
 
     /**
@@ -140,8 +142,8 @@ class RolController extends Controller
      */
     public function destroy($id)
     {
-        DB::tabld('roles')->where('id', $id)->delete();
+        DB::table('roles')->where('id', $id)->delete();
 
-        return redirect()->route('route.index');
+        return redirect()->route('roles.index');
     }
 }

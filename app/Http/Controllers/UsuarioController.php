@@ -13,8 +13,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
+
+
 class UsuarioController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->middleware(
+            'role:Administrador'
+        );
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,12 +35,11 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $user = User::find(Auth::user()->id);        
+        $user = User::find(Auth::user()->id);
         $permissions = $user->getAllPermissions();
+        $users = User::paginate(5);
         
-        $usuarios = User::paginate(5);
-
-        return view('usuarios.index', compact('usuarios', 'user', 'permissions'));
+        return view('usuarios.index', compact('users', 'user', 'permissions'));
     }
 
     /**
@@ -38,8 +50,9 @@ class UsuarioController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
+        $user = User::find(Auth::user()->id);
         
-        return view('usuarios.crear', compact('roles'));
+        return view('usuarios.crear', compact('roles', 'user'));        
     }
 
     /**
@@ -63,8 +76,8 @@ class UsuarioController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
-        $usuario = User::create($input);
-        $usuario->assignRole($request->input('roles'));
+        $user = User::create($input);
+        $user->assignRole($request->input('roles'));
 
         return redirect()->route('usuarios.index');
     }
@@ -91,8 +104,8 @@ class UsuarioController extends Controller
         $usuario = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $usuario->roles->pluck('name', 'name')->all();
-
-        return view('usuarios.editar', compact('usuario', 'roles', 'userRole'));
+        $user = User::find(Auth::user()->id);
+        return view('usuarios.editar', compact('usuario', 'roles', 'userRole', 'user'));
     }
 
     /**
@@ -123,7 +136,7 @@ class UsuarioController extends Controller
         {
             $input = Arr::except($input, array('password'));
         }
-
+        
         $usuario = User::find($id);
         $usuario->update($input);
         DB::table('model_has_roles')->where('model_id', $id)->delete();

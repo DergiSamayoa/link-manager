@@ -20,7 +20,7 @@
                                 <thead style="background-color:#6777ef">                                     
                                     <th style="display: none;">ID</th>
                                     <th style="color:#fff;">Titulo</th>
-                                    <th style="color:#fff;">Contenido</th>                                    
+                                    <th style="color:#fff;">Contenido</th>                                     
                                     <th style="color:#fff;">Acciones</th>                                                                   
                               </thead>
                               <tbody>
@@ -29,16 +29,20 @@
                                 <td style="display: none;">{{ $blog->id }}</td>                                
                                 <td>{{ $blog->titulo }}</td>
                                 <td>{{ $blog->contenido }}</td>
-                                <td>
-                                    <form action="{{ route('blogs.destroy',$blog->id) }}" method="POST">                                        
+                                <td>                                    
+                                    <form action="{{ route('blogs.destroy',$blog->id) }}" method="POST">    
+                                        @can('ver-blog')  
+                                            <a class="btn btn-success" href="{{ $blog->link }}" target="_blank">Descarga</a>     
+                                        @endcan                             
+
                                         @can('editar-blog')
-                                        <a class="btn btn-info" href="{{ route('blogs.edit',$blog->id) }}">Editar</a>
+                                            <a class="btn btn-info" href="{{ route('blogs.edit',$blog->id) }}">Editar</a>
                                         @endcan
 
                                         @csrf
                                         @method('DELETE')
                                         @can('borrar-blog')
-                                        <button type="submit" class="btn btn-danger">Borrar</button>
+                                            <button type="submit" class="btn btn-danger">Borrar</button>
                                         @endcan
                                     </form>
                                 </td>

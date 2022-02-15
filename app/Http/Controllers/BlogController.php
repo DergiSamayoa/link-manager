@@ -55,7 +55,8 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('blogs.crear');
+        $user = User::find(Auth::user()->id);
+        return view('blogs.crear', compact('user'));
     }
 
     /**
@@ -68,7 +69,8 @@ class BlogController extends Controller
     {
         request()->validate([
             'titulo' => 'required',
-            'contenido' => 'required'
+            'contenido' => 'required',
+            'link' => 'required|url'
         ]);
 
         Blog::create($request->all());
@@ -84,7 +86,8 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        return view('blogs.editar', compact('blog'));
+        $user = User::find(Auth::user()->id);
+        return view('blogs.editar', compact('blog', 'user'));
     }
 
     /**
@@ -98,11 +101,13 @@ class BlogController extends Controller
     {
         request()->validate([
             'titulo' => 'required',
-            'contenido' => 'required'
+            'contenido' => 'required',
+            'link' => 'required|url'
         ]);
 
         $blog->update($request->all());
 
+        return redirect()->route('blogs.index');
     }
 
     /**
