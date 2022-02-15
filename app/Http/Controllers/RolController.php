@@ -129,7 +129,7 @@ class RolController extends Controller
         $role->name = $request->input('name');
         $role->save();
 
-        $role->syncPermissions($request->input('permissions'));
+        $role->syncPermissions($request->input('permission'));
 
         return redirect()->route('roles.index');
     }
